@@ -2,9 +2,11 @@ import json
 import requests
 import requests.auth
 import time
+import re
 
 
 def getToken():
+	'''Gets OAuth token from reddit and saves as the file '.token'. also returns the token.  There is no protection here.'''
 	f = open('.token', 'w')
 	client_ID = 'LAFe-EVyQRQwJA'
 	client_secret = 'Ci3byZwr0MXSqWZNrGuCFtbs_4s'
@@ -17,22 +19,59 @@ def getToken():
 	f.close()
 	return data[u'access_token']
 
+def trawl(postDict, lastTime, headers):
+	boys_dont_cry = re.compile('\[FRESH\].*(Frank|frank|FRANK).*(OCEAN|Ocean|ocean).*')
+	reTrawl = True
+	while reTrawl:
+		for post in postDict['data']['children']:
+			if boys_dont_cry.match(post['data']['title'])
+				return post['data']['url']
+			if post['data']['created_utc'] < lastTime:
+				reTrawl = False
+		headers['after'] = postDict['data']['after']
+		postDict = request(headers)
+		headers.pop('after', 0)
+	return 0
+
+
+
+
+def request(headers):
+	new_posts = requests.get('https://oauth.reddit.com/r/hiphopheads/new/.json', headers=headers)
+	if new_posts.status_code == 429 or new_posts.status_code == 401:
+		print('429/401: trying again')
+		headers['Authorization'] = 'bearer '+getToken()
+		new_posts = requests.get('https://oauth.reddit.com/r/hiphopheads/new/.json', headers=headers)
+	return new_posts
+
+
+
+
 def main():
 	#import pdb; pdb.set_trace()
 	dropped = False
 	f = open('.token', 'r')
-	token = f.read()
+	token = f.read().splitlines()
 	f.close()
-	headers = {'Authorization': 'bearer ' + token, 'User-Agent': 'hasItDropped by viraj', 'count': 50}
-	while not dropped:
-		new_posts = requests.get('http://oauth.reddit.com/r/hiphopheads/new/.json', headers=headers)
-		if new_posts.status_code == 429:
-			print('429: trying again')
-			headers['Authorization'] = 'bearer '+getToken()
-			new_posts = requests.get('http://oauth.reddit.com/r/hiphopheads/new/.json', headers=headers)
-		print new_posts.text
+	headers = {'Authorization': 'bearer ' + token[0], 'User-Agent': 'hasItDropped by viraj', 'limit': '1'}
+	trawl = 0
+	lastTime = 0
 
-	#data = new_posts.json()
+
+	while not dropped:
+		new_posts = request(headers)
+		trawl += 1
+		caughtUp = False
+
+		print 'Trawl {} complete'.format(trawl)
+		
+		data = new_posts.json()
+		dropped = trawl(data, lastTime, headers)
+		lastTime = data['data']['children'][0]['data']['created_utc']
+
+		time.sleep(600)
+
+	
 
 if __name__ == "__main__":
 	main()
