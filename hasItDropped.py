@@ -49,13 +49,13 @@ def request(headers):
 
 
 def main():
-	import pdb; pdb.set_trace()
+	#import pdb; pdb.set_trace()
 	dropped = False
 	f = open('.token', 'r')
 	token = f.read().splitlines()
 	f.close()
 	headers = {'Authorization': 'bearer ' + token[0], 'User-Agent': 'hasItDropped by viraj', 'limit': '1'}
-	trawl = 0
+	trawlNum = 0
 	lastTime = 0
 
 
