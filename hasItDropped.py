@@ -3,6 +3,7 @@ import requests
 import requests.auth
 import time
 import re
+import subprocess
 
 
 def getToken():
@@ -71,7 +72,12 @@ def main():
 
 		time.sleep(600)
 
-	
+	phoneBook = {'Viraj': '5129631439'}
+	for name in phoneBook:
+		message = "Hi, {}!  This is Viraj Mehta's hasItDropped app telling you that Frank Ocean has dropped at {}".format(name, dropped)
+		subprocess.call(['osascript', 'sms\ script.scpt', phoneBook[name], message])
+
+	return
 
 if __name__ == "__main__":
 	main()
