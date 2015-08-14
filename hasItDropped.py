@@ -25,7 +25,7 @@ def trawl(postDict, lastTime, headers):
 	reTrawl = True
 	while reTrawl:
 		for post in postDict['data']['children']:
-			if boys_dont_cry.match(post['data']['title'])
+			if boys_dont_cry.match(post['data']['title']):
 				return post['data']['url']
 			if post['data']['created_utc'] < lastTime:
 				reTrawl = False
@@ -61,10 +61,9 @@ def main():
 
 	while not dropped:
 		new_posts = request(headers)
-		trawl += 1
-		caughtUp = False
+		trawlNum += 1
 
-		print 'Trawl {} complete'.format(trawl)
+		print 'Trawl {} complete'.format(trawlNum)
 		
 		data = new_posts.json()
 		dropped = trawl(data, lastTime, headers)
@@ -72,7 +71,7 @@ def main():
 
 		time.sleep(600)
 
-	phoneBook = {'Viraj': '5129631439'}
+	phoneBook = {'Viraj': '5129631439', 'David': '4256477687'}
 	for name in phoneBook:
 		message = "Hi, {}!  This is Viraj Mehta's hasItDropped app telling you that Frank Ocean has dropped at {}".format(name, dropped)
 		subprocess.call(['osascript', 'sms\ script.scpt', phoneBook[name], message])
