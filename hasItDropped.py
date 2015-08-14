@@ -49,7 +49,7 @@ def request(headers):
 
 
 def main():
-	#import pdb; pdb.set_trace()
+	import pdb; pdb.set_trace()
 	dropped = False
 	f = open('.token', 'r')
 	token = f.read().splitlines()
