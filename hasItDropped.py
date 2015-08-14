@@ -49,7 +49,7 @@ def request(headers):
 
 
 def main():
-	#import pdb; pdb.set_trace()
+	import pdb; pdb.set_trace()
 	dropped = False
 	f = open('.token', 'r')
 	token = f.read().splitlines()
@@ -74,7 +74,7 @@ def main():
 	phoneBook = {'Viraj': '5129631439', 'David': '4256477687'}
 	for name in phoneBook:
 		message = "Hi, {}!  This is Viraj Mehta's hasItDropped app telling you that Frank Ocean has dropped at {}".format(name, dropped)
-		subprocess.call(['osascript', 'sms\ script.scpt', phoneBook[name], message])
+		subprocess.call(['osascript', 'textScript.scpt', phoneBook[name], message])
 
 	return
 
