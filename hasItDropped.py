@@ -59,7 +59,7 @@ def request(headers):
 
 
 def main():
-	import pdb; pdb.set_trace()
+
 	dropped = False
 	f = open('.token', 'r')
 	token = f.read().splitlines()#checks for old token.  Mostly for testing purposes, since when it runs it will hold the token in memory I think
@@ -77,10 +77,10 @@ def main():
 		print 'Trawl {} complete'.format(trawlNum)
 		
 		lastTime = data['data']['children'][0]['data']['created_utc'] #saves freshest post looked at for future endpoint
-
 		time.sleep(600)	#wait 10 minutes
+	
 
-	phoneBook = {'Viraj': '5129631439', 'David': '4256477687'}
+	phoneBook = json.load(open('phoneBook.json'))
 	for name in phoneBook:
 		message = "Hi, {}!  This is Viraj Mehta's hasItDropped app telling you that Frank Ocean has dropped at {}".format(name, dropped)
 		subprocess.call(['osascript', 'textScript.scpt', phoneBook[name], message])	#send a text
