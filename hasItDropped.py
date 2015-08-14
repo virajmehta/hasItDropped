@@ -30,7 +30,7 @@ def trawl(postDict, lastTime, headers):
 			if post['data']['created_utc'] < lastTime:
 				reTrawl = False
 		headers['after'] = postDict['data']['after']
-		postDict = request(headers)
+		postDict = request(headers).json()
 		headers.pop('after', 0)
 	return 0
 
@@ -56,7 +56,7 @@ def main():
 	f.close()
 	headers = {'Authorization': 'bearer ' + token[0], 'User-Agent': 'hasItDropped by viraj', 'limit': '1'}
 	trawlNum = 0
-	lastTime = 0
+	lastTime = 10000000000  	#bigger than current UNIX time for forseeable future, definitely before Frank dies
 
 
 	while not dropped:
