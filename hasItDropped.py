@@ -30,7 +30,8 @@ def trawl(postDict, lastTime, headers):
 	'''When passed a dictionary of the decoded JSON that reddit sends, it looks for Frank's album.  
 	If it doesn't find it, it requests more old posts until the last one it read in the last trawl to make sure it doesn't miss any.  Then it returns false.
 	If it finds the album, it returns the link to it.'''
-	boys_dont_cry = re.compile('\[FRESH\].*(Frank|frank|FRANK).*(OCEAN|Ocean|ocean).*')
+	import pdb; pdb.set_trace()
+	boys_dont_cry = re.compile('\[FRESH\].*(MC).*(Bownes).*')
 	reTrawl = True
 	while reTrawl:
 		for post in postDict['data']['children']:
@@ -77,13 +78,14 @@ def main():
 		print 'Trawl {} complete'.format(trawlNum)
 		
 		lastTime = data['data']['children'][0]['data']['created_utc'] #saves freshest post looked at for future endpoint
-		time.sleep(600)	#wait 10 minutes
+		if not dropped:
+			time.sleep(600)	#wait 10 minutes
 	
 
-	phoneBook = json.load(open('phoneBook.json'))
-	for name in phoneBook:
-		message = "Hi, {}!  This is Viraj Mehta's hasItDropped app telling you that Frank Ocean has dropped at {}".format(name, dropped)
-		subprocess.call(['osascript', 'textScript.scpt', phoneBook[name], message])	#send a text
+	#phoneBook = json.load(open('phoneBook.json'))
+	#for name in phoneBook:
+	message = "Hi, {}!  This is Viraj Mehta's hasItDropped app telling you that Frank Ocean has dropped at {}".format('Viraj', dropped)
+	subprocess.call(['osascript', 'textScript.scpt', '5129631439', message])	#send a text
 
 	return
 
