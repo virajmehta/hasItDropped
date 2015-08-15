@@ -4,6 +4,7 @@ import requests.auth
 import time
 import re
 import subprocess
+import string
 
 '''This module is designed to request all the new content from reddit.com/r/hiphopheads every 10 minutes.
 It then matches every submission's title to a regular expression that would fit any submission of Frank's new album that fits the subreddit's rules.
@@ -31,12 +32,16 @@ def trawl(postDict, lastTime, headers):
 	If it doesn't find it, it requests more old posts until the last one it read in the last trawl to make sure it doesn't miss any.  Then it returns false.
 	If it finds the album, it returns the link to it.'''
 	import pdb; pdb.set_trace()
-	boys_dont_cry = re.compile('\[FRESH\].*(MC).*(Bownes).*')
+	boys_dont_cry = re.compile('\[fresh\].*(frank).*(ocean).*')
+	weak_match = re.compile('(.*(frank).*(ocean).*(album).*)|(.*(album).*(frank).*(ocean).*')
 	reTrawl = True
 	while reTrawl:
 		for post in postDict['data']['children']:
-			if boys_dont_cry.match(post['data']['title']):
+			if boys_dont_cry.match(string.lower(post['data']['title'])):
 				return post['data']['url']
+			if weak_match.match(string.lower(post['data']['title'])):
+				if post['data']['domain'] in ['soundcloud.com', 'itunes.apple.com', 'open.spotify.com']:
+					return post['data']['url']
 			if post['data']['created_utc'] < lastTime:
 				reTrawl = False
 		headers['after'] = postDict['data']['after']
@@ -82,10 +87,10 @@ def main():
 			time.sleep(600)	#wait 10 minutes
 	
 
-	#phoneBook = json.load(open('phoneBook.json'))
-	#for name in phoneBook:
-	message = "Hi, {}!  This is Viraj Mehta's hasItDropped app telling you that Frank Ocean has dropped at {}".format('Viraj', dropped)
-	subprocess.call(['osascript', 'textScript.scpt', '5129631439', message])	#send a text
+	phoneBook = json.load(open('phoneBook.json'))
+	for name in phoneBook:
+		message = "Hi, {}!  This is Viraj Mehta's hasItDropped app telling you that Frank Ocean has dropped at {}".format(name, dropped)
+		subprocess.call(['osascript', 'textScript.scpt', phoneBook[name], message])	#send a text
 
 	return
 
