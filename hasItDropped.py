@@ -31,9 +31,8 @@ def trawl(postDict, lastTime, headers):
 	'''When passed a dictionary of the decoded JSON that reddit sends, it looks for Frank's album.  
 	If it doesn't find it, it requests more old posts until the last one it read in the last trawl to make sure it doesn't miss any.  Then it returns false.
 	If it finds the album, it returns the link to it.'''
-	import pdb; pdb.set_trace()
 	boys_dont_cry = re.compile('\[fresh\].*(frank).*(ocean).*')
-	weak_match = re.compile('(.*(frank).*(ocean).*(album).*)|(.*(album).*(frank).*(ocean).*')
+	weak_match = re.compile('(.*(frank).*(ocean).*(album).*)|(.*(album).*(frank).*(ocean).*)')
 	reTrawl = True
 	while reTrawl:
 		for post in postDict['data']['children']:
